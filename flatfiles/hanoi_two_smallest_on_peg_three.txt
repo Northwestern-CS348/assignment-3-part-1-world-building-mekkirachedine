@@ -1,21 +1,43 @@
-"""
-For a game where there are 5 disks,
-write down the Facts and Rules to model the game state where 
-disk1 and disk2 (the smallest two) are on peg3, and
-other disks are on peg1.
+fact: (isa disk1 disk)
+fact: (isa disk2 disk)
+fact: (isa disk3 disk)
+fact: (isa disk4 disk)
+fact: (isa disk5 disk)
 
-        |            |            |
-        |            |            |
-        |            |            |
-        |            |            |
-     ---|--- disk3   |            |
-    ----|----        |           -|- disk1
-   -----|----- disk5 |          --|-- disk2
-==========================================
-       peg1         peg2         peg3
-       
-Example: 
-fact: (pred obj1 obj2)
-rule: ((pred obj1 obj2) (pred obj2 obj3)) -> (pred obj1 obj3)
+fact: (isa peg1 peg)
+fact: (isa peg2 peg)
+fact: (isa peg3 peg)
 
-"""
+fact: (smaller disk1 disk2)
+fact: (smaller disk2 disk3)
+fact: (smaller disk3 disk4)
+fact: (smaller disk4 disk5)
+
+fact: (onDisk disk1 disk2)
+fact: (onDisk disk3 disk4)
+fact: (onDisk disk4 disk5)
+
+fact: (on disk1 peg3)
+fact: (on disk2 peg3)
+fact: (on disk3 peg1)
+fact: (on disk4 peg1)
+fact: (on disk5 peg1)
+
+fact: (movable disk1 peg3 peg2)
+fact: (movable disk1 peg3 peg1)
+fact: (movable disk3 peg1 peg2)
+
+rule: ((smaller ?d1 ?d2) (smaller ?d2 ?d3)) -> (smaller ?d1 ?d3)
+rule: ((onDisk ?d1 ?d2) (onDisk ?d2 ?d3)) -> (onDisk ?d1 ?d3)
+rule: ((on SK-r ?p)) -> (notEmpty ?p)
+rule: (~(notEmpty ?p)) -> (empty ?p)
+
+rule: ((onDisk SK-r ?d)) -> (notOnTop ?d)
+rule: (~(notOnTop ?d)) -> (onTop ?d)
+rule: ((on ?d ?p) (onTop ?d)) -> (onTopOf ?d ?p)
+
+rule: ((onTop ?d)) -> (CanBeMoved ?d)
+rule: ((notOnTop ?d)) -> (CannotBeMoved ?d)
+
+rule: ((CanBeMoved ?d) (empty ?p)) -> (CanBeMovedTo ?d ?p)
+rule: ((CanBeMoved ?d1) (onTopOf ?d2 ?p) (smaller ?d1 ?d2)) -> (CanBeMovedTo ?d1 ?p)

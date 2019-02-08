@@ -1,19 +1,44 @@
-"""
-For a game with 8 tiles of blocks on a 3x3 grid,
-write down the Facts and Rules to model the game state 
-shown as the follows:
+﻿fact: (isa tile1 tile)
+fact: (isa tile2 tile)
+fact: (isa tile3 tile)
+fact: (isa tile4 tile)
+fact: (isa tile5 tile)
+fact: (isa tile6 tile)
+fact: (isa tile7 tile)
+fact: (isa tile8 tile)
+fact: (isa empty tile)
 
- y\\x   pos1     pos2     pos3
-     ┌────────┬────────┬────────┐
-pos1 │ tile1  │ tile2  │ tile3  │
-     ├────────┼────────┼────────┤
-pos2 │ tile8  │ empty  │ tile4  │
-     ├────────┼────────┼────────┤
-pos3 │ tile7  │ tile6  │ tile5  │
-     └────────┴────────┴────────┘
+fact: (X tile1 pos1)
+fact: (Y tile1 pos1)
+fact: (X tile2 pos2)
+fact: (Y tile2 pos1)
+fact: (X tile3 pos3)
+fact: (Y tile3 pos1)
+fact: (X tile4 pos3)
+fact: (Y tile4 pos2)
+fact: (X tile5 pos3)
+fact: (Y tile5 pos3)
+fact: (X tile6 pos2)
+fact: (Y tile6 pos3)
+fact: (X tile7 pos1)
+fact: (Y tile7 pos3)
+fact: (X tile8 pos1)
+fact: (Y tile8 pos2)
+fact: (X empty pos2)
+fact: (Y empty pos2)
 
-Example: 
-fact: (pred obj1 obj2)
-rule: ((pred obj1 obj2) (pred obj2 obj3)) -> (pred obj1 obj3)
+fact: (movable tile2 pos2 pos1 pos2 pos2)
+fact: (movable tile4 pos3 pos2 pos2 pos2)
+fact: (movable tile6 pos2 pos3 pos2 pos2)
+fact: (movable tile8 pos1 pos2 pos2 pos2)
 
-"""
+rule: ((X ?t1 ?p) (X ?t2 ?p) (Y ?t1 pos2)) -> (adjacent ?t1 ?t2)
+rule: ((X ?t1 ?p) (X ?t2 ?p) (Y ?t2 pos2)) -> (adjacent ?t1 ?t2)
+rule: ((Y ?t1 ?p) (Y ?t2 ?p) (X ?t1 pos2)) -> (adjacent ?t1 ?t2)
+rule: ((Y ?t1 ?p) (Y ?t2 ?p) (X ?t2 pos2)) -> (adjacent ?t1 ?t2)
+
+rule: ((adjacent ?t empty) (X ?t ?px1) (Y ?t ?py1) (X empty ?px2) (Y empty ?py2)) -> (MOVABLE ?t ?px1 ?py1 ?px2 ?py2)
+
+
+
+
